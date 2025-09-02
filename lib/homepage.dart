@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title),
         ),
         body: Center(
-          // Temporarily commented out PageView until GoogleNavBar is added
+
 
           child: PageView(
             controller: _pageController,
