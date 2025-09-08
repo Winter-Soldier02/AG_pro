@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'components.dart';
+
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -12,25 +14,43 @@ class LoginPage extends StatelessWidget {
         body:SingleChildScrollView(child:
         Column(
       children: [
-        // Container(
-        //   decoration: BoxDecoration(
-        //     // boxShadow: [BoxShadow(
-        //     //   color: Colors.black.withOpacity(0.1),
-        //     //   spreadRadius: 3,
-        //     //   blurRadius: 6,
-        //     // ),],
-        //
-        //     color: Colors.green[300],
-        //     borderRadius: BorderRadius.only(
-        //
-        //       //bottomLeft: Radius.circular(50),
-        //       //bottomRight: Radius.circular(50),
-        //     ),
-        //   ),
-        //   height: 300,
-        //
-        // ),
-        SizedBox(height: 300,),
+        Container(
+          decoration: BoxDecoration(
+            // boxShadow: [BoxShadow(
+            //   color: Colors.black.withOpacity(0.1),
+            //   spreadRadius: 3,
+            //   blurRadius: 6,
+            // ),],
+
+            color: Colors.green[300],
+            borderRadius: BorderRadius.only(
+
+              //bottomLeft: Radius.circular(50),
+              //bottomRight: Radius.circular(50),
+            ),
+          ),
+          height: 300,
+          child:
+          Column(mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.eco,
+                size: 70,
+              ),
+              SizedBox(height:30),
+              Text(
+                'Welcome to Ag pro',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+
+                ),
+              )
+
+            ],
+          ),
+
+        ),
+        //SizedBox(height: 300,),
         Container(
           decoration: BoxDecoration(
             boxShadow: [BoxShadow(
@@ -46,6 +66,13 @@ class LoginPage extends StatelessWidget {
             ),
           ),
           height: 700,
+          child:
+          Column(
+            children: [
+              SizedBox(height:90 ),
+              TextField()
+            ],
+          ),
 
         ),
 
