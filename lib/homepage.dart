@@ -91,6 +91,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
+                        boxShadow: [BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          spreadRadius: 3,
+                          blurRadius: 6,
+                        ),],
 
                         color: Colors.green[300],
                         borderRadius: BorderRadius.only(
@@ -111,6 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       margin: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
                       padding: EdgeInsets.all(30.0),
                       decoration: BoxDecoration(
+
                         color: Colors.green.shade100,
                         borderRadius: BorderRadius.circular(35),
                       ),
@@ -333,7 +339,7 @@ Widget _weatherItem(IconData icon, String label, String value) {
             label,
             style: TextStyle(fontSize: 12, color: Colors.black54),
           ),
-          SizedBox(height:10),
+          SizedBox(height:6),
           Text(
             value,
             style: TextStyle(
