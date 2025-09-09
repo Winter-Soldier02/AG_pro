@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'auth.dart';
 
 
 
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  MyHomePage({super.key});
+
+  final User? user =Auth().currentUser;
 
 
 
-  final String title;
+  // final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -73,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           toolbarHeight: 0,
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(widget.title),
+          title: Text('agp'),
         ),
         body: Center(
 
