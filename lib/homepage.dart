@@ -1,8 +1,9 @@
+import 'package:ag_pro/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'auth.dart';
+
 
 
 
@@ -11,6 +12,15 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({super.key});
 
   final User? user =Auth().currentUser;
+
+  Future<void> signOut() async{
+    await Auth().signOut();
+  }
+
+  Widget _userUid(){
+    return Text(user?.email ?? 'User email');
+  }
+
 
 
 
@@ -67,6 +77,19 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Future<void> signOut() async{
+    await Auth().signOut();
+  }
+  Widget _signOut() {
+    return ElevatedButton(
+      onPressed: signOut,
+      style: ElevatedButton.styleFrom(
+        primary: Colors.red, // Set the button's color to red
+      ),
+      child: Text('Logout'),
+    );
+  }
+
 
 
 
@@ -109,6 +132,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       height: 200,
+                      child:
+                        _signOut()
+
+
 
                     ),
                     SizedBox(height:30),

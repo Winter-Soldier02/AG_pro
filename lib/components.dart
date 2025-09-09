@@ -33,3 +33,34 @@ class Textf extends StatelessWidget {
     );
   }
 }
+
+
+class LoginButton extends StatelessWidget {
+  final Function()? onTap;
+
+  const LoginButton({super.key, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+
+        padding: const EdgeInsets.all(20),
+        margin: const EdgeInsets.symmetric(horizontal: 30),
+        child: const Center(
+          child: Text(
+            'Login',
+            style: TextStyle(color: Colors.black,
+            fontWeight: FontWeight.bold),
+          ),
+        ),
+        decoration: BoxDecoration(
+
+          color: Colors.green[300],
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+  }
+}
