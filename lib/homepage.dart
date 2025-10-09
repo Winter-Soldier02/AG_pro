@@ -6,7 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'planthealth.dart';
 import 'soilhealth.dart';
 import 'menupage.dart';
-import 'weatherpage.dart'; // Import the weather page
+import 'weatherpage.dart';
+import 'weatherservices.dart'; // ADDED: Import weather service
 import 'dart:async';
 
 class MyHomePage extends StatefulWidget {
@@ -35,6 +36,15 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentCardIndex = 0;
   Timer? _cardTimer;
   final PageController _cardPageController = PageController();
+
+  // ADDED: Weather service and variables
+  final WeatherService _weatherService = WeatherService();
+  String _temperature = '--°C';
+  String _humidity = '--%';
+  String _rainfall = '0%';
+  String _windSpeed = '-- km/h';
+  String _cityName = 'Loading...';
+  bool _weatherLoading = true;
 
   // Card data
   final List<Map<String, dynamic>> _cards = [
@@ -79,6 +89,55 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _startCardRotation();
+    _loadWeatherData(); // ADDED: Load weather data on app start
+  }
+
+  // ADDED: Function to load weather data from API
+  Future<void> _loadWeatherData() async {
+    print('🏠 Homepage: Loading weather data...');
+
+    setState(() {
+      _weatherLoading = true;
+    });
+
+    try {
+      final weatherData = await _weatherService.fetchWeatherData();
+      print('✅ Homepage: Weather data received');
+      print('Temperature: ${weatherData['current']['temperature']}');
+
+      if (mounted) {
+        setState(() {
+          _temperature = '${weatherData['current']['temperature']?.round() ?? '--'}°C';
+          _humidity = '${weatherData['hourly']['relative_humidity_2m'][0] ?? '--'}%';
+          _rainfall = '${weatherData['hourly']['precipitation_probability'][0] ?? 0}%';
+          _windSpeed = '${weatherData['current']['windspeed']?.round() ?? '--'} km/h';
+          _cityName = weatherData['city'] ?? 'Mumbai';
+          _weatherLoading = false;
+        });
+        print('✅ Homepage: Weather UI updated successfully');
+      }
+    } catch (e) {
+      print('❌ Homepage: Error loading weather: $e');
+      if (mounted) {
+        setState(() {
+          // Set fallback values if API fails
+          _temperature = '28°C';
+          _humidity = '65%';
+          _rainfall = '5%';
+          _windSpeed = '12 km/h';
+          _cityName = 'Mumbai';
+          _weatherLoading = false;
+        });
+      }
+
+      // Show error snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Could not load weather data'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+    }
   }
 
   @override
@@ -120,7 +179,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildAutoRefreshCard() {
     return GestureDetector(
       onTap: () {
-        // Navigate to weather page on tap
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => WeatherPage()),
@@ -143,7 +201,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           child: Stack(
             children: [
-              // Main card content
               PageView.builder(
                 controller: _cardPageController,
                 itemCount: _cards.length,
@@ -151,6 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {
                     _currentCardIndex = index;
                   });
+                  print('Page changed to: $index');
                 },
                 itemBuilder: (context, index) {
                   final card = _cards[index];
@@ -200,8 +258,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 },
               ),
-
-              // Progress indicator dots
               Positioned(
                 bottom: 15,
                 left: 0,
@@ -225,8 +281,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-
-              // Card type indicator
               Positioned(
                 top: 15,
                 right: 15,
@@ -312,7 +366,6 @@ class _MyHomePageState extends State<MyHomePage> {
             SingleChildScrollView(
               child: Column(
                 children: [
-                  // User greeting section
                   Container(
                     decoration: BoxDecoration(color: Colors.green[300]),
                     height: 100,
@@ -334,13 +387,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                   ),
-
-                  // Auto-refreshing card system (tappable)
                   _buildAutoRefreshCard(),
-
                   SizedBox(height: 30),
 
-                  // Weather card - also tappable
+                  // UPDATED: Weather card with real API data
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -357,7 +407,31 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: Colors.green.shade100,
                         borderRadius: BorderRadius.circular(35),
                       ),
-                      child: Column(
+                      child: _weatherLoading
+                          ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(
+                              color: Colors.green.shade700,
+                            ),
+                            SizedBox(height: 15),
+                            Text(
+                              'Loading weather...',
+                              style: TextStyle(
+                                color: Colors.green.shade700,
+                                fontSize: 14,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            TextButton(
+                              onPressed: _loadWeatherData,
+                              child: Text('Retry'),
+                            ),
+                          ],
+                        ),
+                      )
+                          : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
@@ -376,10 +450,19 @@ class _MyHomePageState extends State<MyHomePage> {
                                       size: 18, color: Colors.green.shade900),
                                   SizedBox(width: 4),
                                   Text(
-                                    "Green Valley, CA",
+                                    _cityName, // CHANGED: Now from API
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.black87,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  InkWell(
+                                    onTap: _loadWeatherData,
+                                    child: Icon(
+                                      Icons.refresh,
+                                      size: 18,
+                                      color: Colors.green.shade900,
                                     ),
                                   ),
                                 ],
@@ -387,6 +470,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             ],
                           ),
                           SizedBox(height: 30),
+
+                          // THIS IS THE PART YOU WANTED UPDATED!
                           Expanded(
                             child: GridView.count(
                               crossAxisCount: 2,
@@ -395,12 +480,13 @@ class _MyHomePageState extends State<MyHomePage> {
                               childAspectRatio: 3,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
+                                // CHANGED: All values now from API
                                 _weatherItem(
-                                    Icons.thermostat, "Temperature", "25°C"),
+                                    Icons.thermostat, "Temperature", _temperature),
                                 _weatherItem(
-                                    Icons.water_drop, "Humidity", "60%"),
-                                _weatherItem(Icons.grain, "Rainfall", "5 mm"),
-                                _weatherItem(Icons.air, "Wind", "10 km/h"),
+                                    Icons.water_drop, "Humidity", _humidity),
+                                _weatherItem(Icons.grain, "Rainfall", _rainfall),
+                                _weatherItem(Icons.air, "Wind", _windSpeed),
                               ],
                             ),
                           ),
