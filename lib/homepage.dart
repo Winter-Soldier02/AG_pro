@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'planthealth.dart';
 import 'soilhealth.dart';
 import 'menupage.dart';
+import 'weatherpage.dart'; // Import the weather page
 import 'dart:async';
 
 class MyHomePage extends StatefulWidget {
@@ -117,135 +118,136 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildAutoRefreshCard() {
-    return Container(
-      height: 200,
-      margin: EdgeInsets.symmetric(horizontal: 0),
-      decoration: BoxDecoration(
-        // boxShadow: [
-        //   BoxShadow(
-        //     color: Colors.black.withOpacity(0.1),
-        //     spreadRadius: 3,
-        //     blurRadius: 6,
-        //   ),
-        // ],
-        color: Colors.green[300],
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(50),
-          bottomRight: Radius.circular(50),
+    return GestureDetector(
+      onTap: () {
+        // Navigate to weather page on tap
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => WeatherPage()),
+        );
+      },
+      child: Container(
+        height: 200,
+        margin: EdgeInsets.symmetric(horizontal: 0),
+        decoration: BoxDecoration(
+          color: Colors.green[300],
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(50),
+            bottomRight: Radius.circular(50),
+          ),
         ),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(50),
-          bottomRight: Radius.circular(50),
-        ),
-        child: Stack(
-          children: [
-            // Main card content
-            PageView.builder(
-              controller: _cardPageController,
-              itemCount: _cards.length,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentCardIndex = index;
-                });
-                print('Page changed to: $index'); // Debug message
-              },
-              itemBuilder: (context, index) {
-                final card = _cards[index];
-                return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(15),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(50),
+            bottomRight: Radius.circular(50),
+          ),
+          child: Stack(
+            children: [
+              // Main card content
+              PageView.builder(
+                controller: _cardPageController,
+                itemCount: _cards.length,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentCardIndex = index;
+                  });
+                },
+                itemBuilder: (context, index) {
+                  final card = _cards[index];
+                  return Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Icon(
+                            card['icon'],
+                            size: 32,
+                            color: Colors.white,
+                          ),
                         ),
-                        child: Icon(
-                          card['icon'],
-                          size: 32,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: 15),
-                      Text(
-                        card['title'],
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 10),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                          card['content'],
+                        SizedBox(height: 15),
+                        Text(
+                          card['title'],
                           style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white.withOpacity(0.9),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                           textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            card['content'],
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white.withOpacity(0.9),
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
 
-            // Progress indicator dots
-            Positioned(
-              bottom: 15,
-              left: 0,
-              right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  _cards.length,
-                      (index) => AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
-                    margin: EdgeInsets.symmetric(horizontal: 3),
-                    height: 6,
-                    width: _currentCardIndex == index ? 20 : 6,
-                    decoration: BoxDecoration(
-                      color: _currentCardIndex == index
-                          ? Colors.white
-                          : Colors.white.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(3),
+              // Progress indicator dots
+              Positioned(
+                bottom: 15,
+                left: 0,
+                right: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    _cards.length,
+                        (index) => AnimatedContainer(
+                      duration: Duration(milliseconds: 300),
+                      margin: EdgeInsets.symmetric(horizontal: 3),
+                      height: 6,
+                      width: _currentCardIndex == index ? 20 : 6,
+                      decoration: BoxDecoration(
+                        color: _currentCardIndex == index
+                            ? Colors.white
+                            : Colors.white.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(3),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
 
-            // Card type indicator
-            Positioned(
-              top: 15,
-              right: 15,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  _cards[_currentCardIndex]['type'].toString().toUpperCase(),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
+              // Card type indicator
+              Positioned(
+                top: 15,
+                right: 15,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    _cards[_currentCardIndex]['type'].toString().toUpperCase(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -310,93 +312,100 @@ class _MyHomePageState extends State<MyHomePage> {
             SingleChildScrollView(
               child: Column(
                 children: [
-                  // Auto-refreshing card system
+                  // User greeting section
                   Container(
-
-                    decoration: BoxDecoration(
-                      color:Colors.green[300]
-                    ),
+                    decoration: BoxDecoration(color: Colors.green[300]),
                     height: 100,
-                    padding: EdgeInsets.only(left:50),
-                    child:
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-
-                              Text('Hello User!',
-                              style: TextStyle(fontSize: 20,
-                              fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(width:150),
-                              Icon(Icons.person),
-                            ],
-                          )
-                        ],
-                      )
+                    padding: EdgeInsets.only(left: 50),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Hello User!',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(width: 150),
+                            Icon(Icons.person),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
 
+                  // Auto-refreshing card system (tappable)
                   _buildAutoRefreshCard(),
 
                   SizedBox(height: 30),
 
-                  Container(
-                    height: 250,
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
-                    padding: EdgeInsets.all(30.0),
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade100,
-                      borderRadius: BorderRadius.circular(35),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Weather",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Icon(Icons.location_on,
-                                    size: 18, color: Colors.green.shade900),
-                                SizedBox(width: 4),
-                                Text(
-                                  "Green Valley, CA",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                        SizedBox(height: 30),
-                        Expanded(
-                          child: GridView.count(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 12,
-                            childAspectRatio: 3,
-                            physics: NeverScrollableScrollPhysics(),
+                  // Weather card - also tappable
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => WeatherPage()),
+                      );
+                    },
+                    child: Container(
+                      height: 250,
+                      width: double.infinity,
+                      margin: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
+                      padding: EdgeInsets.all(30.0),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade100,
+                        borderRadius: BorderRadius.circular(35),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _weatherItem(
-                                  Icons.thermostat, "Temperature", "25°C"),
-                              _weatherItem(Icons.water_drop, "Humidity", "60%"),
-                              _weatherItem(Icons.grain, "Rainfall", "5 mm"),
-                              _weatherItem(Icons.air, "Wind", "10 km/h"),
+                              Text(
+                                "Weather",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Icon(Icons.location_on,
+                                      size: 18, color: Colors.green.shade900),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    "Green Valley, CA",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ],
+                              )
                             ],
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 30),
+                          Expanded(
+                            child: GridView.count(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                              childAspectRatio: 3,
+                              physics: NeverScrollableScrollPhysics(),
+                              children: [
+                                _weatherItem(
+                                    Icons.thermostat, "Temperature", "25°C"),
+                                _weatherItem(
+                                    Icons.water_drop, "Humidity", "60%"),
+                                _weatherItem(Icons.grain, "Rainfall", "5 mm"),
+                                _weatherItem(Icons.air, "Wind", "10 km/h"),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
 
@@ -437,41 +446,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   SizedBox(height: 30),
-                  // Container(
-                  //   height: 250,
-                  //   width: 400,
-                  //   margin: EdgeInsets.symmetric(horizontal: 30.0),
-                  //   padding: EdgeInsets.all(50.0),
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(50.00),
-                  //     color: Colors.green.shade100,
-                  //   ),
-                  //   child: Column(
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       Text(
-                  //         'Soil Health',
-                  //         style: TextStyle(
-                  //             fontSize: 20, fontWeight: FontWeight.bold),
-                  //       ),
-                  //       Row(
-                  //         children: [],
-                  //       ),
-                  //       SizedBox(height: 20),
-                  //       Expanded(
-                  //         child: Column(
-                  //           children: [
-                  //             _soilHealth("pH Level", "6.5"),
-                  //             _soilHealth("Moisture", "45%"),
-                  //             _soilHealth("Nitrogen (N)", "120 "),
-                  //             _soilHealth("Phosphorus (P)", "50"),
-                  //             _soilHealth("Potassium (K)", "80")
-                  //           ],
-                  //         ),
-                  //       )
-                  //     ],
-                  //   ),
-                  // ),
                 ],
               ),
             ),
