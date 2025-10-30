@@ -5,6 +5,7 @@ import 'homepage.dart';
 import 'loginpage.dart';
 import 'wid_t.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'liquidglass.dart';
 
 // void main() {
 //   runApp(const MyApp());
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
       //   //useMaterial3: true,
       // ),
       home: const Widt(),
+      // home: MyGlassWidget()
     );
   }
 }

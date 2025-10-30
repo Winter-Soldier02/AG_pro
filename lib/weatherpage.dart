@@ -532,10 +532,10 @@ class _WeatherPageState extends State<WeatherPage> {
   List<Color> _getGradientColors(int weatherCode) {
     if (weatherCode == 0) {
       // Clear sky - bright blue
-      return [const Color(0xFF2E7EE8), const Color(0xFF4B9FF2), const Color(0xFF87CEEB)];
+      return [const Color(0xFF2E7EE8), const Color(0xFF4B9FF2), const Color(0XFFC8E6C9)];
     } else if (weatherCode <= 3) {
       // Partly cloudy
-      return [const Color(0xFF1E3C72), const Color(0xFF2A5298), const Color(0xFF7E8BA3)];
+      return [const Color(0xFF43A047), const Color(0xFF4CAF50), const Color(0XFFC8E6C9)];
     } else if (weatherCode <= 67) {
       // Rainy - darker blue/grey
       return [const Color(0xFF2C3E50), const Color(0xFF34495E), const Color(0xFF5D6D7E)];
