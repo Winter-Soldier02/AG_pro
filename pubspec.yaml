@@ -42,6 +42,7 @@ dependencies:
   firebase_auth: ^4.4.0
   image_picker: ^0.8.8
   http: ^1.1.0
+
 #  liquid_glass_renderer: ^0.1.1-dev.0
   glassmorphism: ^3.0.0
 
