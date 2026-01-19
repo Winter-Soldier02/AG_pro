@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'api_keys.dart';
+
 
 class PlantHealthPage extends StatefulWidget {
   @override
@@ -19,26 +21,26 @@ class _PlantHealthPageState extends State<PlantHealthPage> {
   String _selectedModel = 'model1'; // Default model
 
   final Map<String, Map<String, String>> _availableModels = {
+    // 'model1': {
+    //   'name': 'HealthyPlants (Alternative)',
+    //   'endpoint': 'https://api-inference.huggingface.co/models/ombhojane/healthyPlantsModel',
+    //   'description': '38 diseases, PlantVillage trained'
+    // },
     'model1': {
-      'name': 'HealthyPlants (Alternative)',
-      'endpoint': 'https://api-inference.huggingface.co/models/ombhojane/healthyPlantsModel',
-      'description': '38 diseases, PlantVillage trained'
-    },
-    'model2': {
-      'name': 'MobileNet Plant Disease',
+      'name': 'AG_leaf',
       'endpoint': 'https://api-inference.huggingface.co/models/linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification',
       'description': 'Fast and efficient, 38 classes'
     },
     'model3': {
       'name': 'Crop Diseases ViT',
-      'endpoint': 'https://api-inference.huggingface.co/models/wambugu71/crop_leaf_diseases_vit',
+      'endpoint': 'https://huggingface.co/YuchengShi/LLaVA-v1.5-7B-Plant-Leaf-Diseases-Detection',
       'description': 'Vision Transformer for crops'
     },
-    'model4': {
-      'name': 'Plant Detection ViT',
-      'endpoint': 'https://api-inference.huggingface.co/models/marwaALzaabi/plant-disease-detection-vit',
-      'description': 'ViT Large model for diseases'
-    },
+    // 'model4': {
+    //   'name': 'Plant Detection ViT',
+    //   'endpoint': 'https://api-inference.huggingface.co/models/marwaALzaabi/plant-disease-detection-vit',
+    //   'description': 'ViT Large model for diseases'
+    // },
   };
 
   Map<String, dynamic> _analysisResults = {
@@ -93,7 +95,7 @@ class _PlantHealthPageState extends State<PlantHealthPage> {
       final response = await http.post(
         url,
         headers: {
-          'Authorization': 'Bearer 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',
+          'Authorization': 'Bearer ${ApiKeys.huggingFace}',
           'Content-Type': 'application/json',
         },
         body: jsonEncode({
@@ -284,7 +286,7 @@ class _PlantHealthPageState extends State<PlantHealthPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Select AI Model',
+              'Select Model',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
