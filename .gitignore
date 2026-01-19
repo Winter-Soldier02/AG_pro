@@ -9,6 +9,9 @@
 .history
 .svn/
 migrate_working_dir/
+lib/backup.txt
+*.txt
+
 
 # IntelliJ related
 *.iml
