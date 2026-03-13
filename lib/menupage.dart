@@ -55,7 +55,7 @@ class _MenuPageState extends State<MenuPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  user?.displayName ?? 'Farmer',
+                  user?.displayName ?? 'Farmer Aniket',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,

@@ -32,10 +32,11 @@ class _PlantHealthPageState extends State<PlantHealthPage> {
       'description': 'Fast and efficient, 38 classes'
     },
     'model3': {
-      'name': 'Crop Diseases ViT',
-      'endpoint': 'https://huggingface.co/YuchengShi/LLaVA-v1.5-7B-Plant-Leaf-Diseases-Detection',
+      'name': 'micro',
+      'endpoint': 'https://api-inference.huggingface.co/models/marwaALzaabi/plant-disease-detection-vit',
       'description': 'Vision Transformer for crops'
     },
+
     // 'model4': {
     //   'name': 'Plant Detection ViT',
     //   'endpoint': 'https://api-inference.huggingface.co/models/marwaALzaabi/plant-disease-detection-vit',
@@ -92,15 +93,20 @@ class _PlantHealthPageState extends State<PlantHealthPage> {
 
       final url = Uri.parse(modelEndpoint);
 
+      // final response = await http.post(
+      //   url,
+      //   headers: {
+      //     'Authorization': 'Bearer ${ApiKeys.huggingFace}',
+      //     'Content-Type': 'application/octet-stream',
+      //   },
       final response = await http.post(
-        url,
+        Uri.parse(modelEndpoint),
         headers: {
           'Authorization': 'Bearer ${ApiKeys.huggingFace}',
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/octet-stream',
         },
-        body: jsonEncode({
-          'inputs': base64Image,
-        }),
+        //
+        body: bytes,
       ).timeout(Duration(seconds: 30));
 
       print('📡 Response status: ${response.statusCode}');

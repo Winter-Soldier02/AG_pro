@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'weatherservices.dart'; // Import weather service
+import 'dart:ui';
 
 class WeatherPage extends StatefulWidget {
   const WeatherPage({Key? key}) : super(key: key);
@@ -103,29 +104,19 @@ class _WeatherPageState extends State<WeatherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading
-          ? Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF1E3C72), Color(0xFF2A5298), Color(0xFF7E8BA3)],
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/weather/d1.jpg'),
+            fit: BoxFit.cover,
           ),
         ),
-        child: const Center(
+        child: isLoading
+            ? const Center(
           child: CircularProgressIndicator(color: Colors.white),
-        ),
-      )
-          : errorMessage.isNotEmpty
-          ? Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF1E3C72), Color(0xFF2A5298), Color(0xFF7E8BA3)],
-          ),
-        ),
-        child: Center(
+        )
+            : errorMessage.isNotEmpty
+            ? Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -143,17 +134,8 @@ class _WeatherPageState extends State<WeatherPage> {
               ),
             ],
           ),
-        ),
-      )
-          : Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: _getGradientColors(currentWeather?['weathercode'] ?? 0),
-          ),
-        ),
-        child: SafeArea(
+        )
+            : SafeArea(
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -175,6 +157,10 @@ class _WeatherPageState extends State<WeatherPage> {
                         ),
                         onPressed: () => Navigator.pop(context),
                       ),
+                      ClipRect(child:
+                      BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                      child:
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
@@ -195,7 +181,8 @@ class _WeatherPageState extends State<WeatherPage> {
                             ),
                           ],
                         ),
-                      ),
+                      ),)),
+
                       IconButton(
                         icon: Container(
                           padding: const EdgeInsets.all(8),
@@ -226,6 +213,10 @@ class _WeatherPageState extends State<WeatherPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
+                        ClipRect(child:
+                        BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                        child:
                         Container(
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
@@ -237,7 +228,7 @@ class _WeatherPageState extends State<WeatherPage> {
                             size: 80,
                             color: Colors.white,
                           ),
-                        ),
+                        ),),),
                         const SizedBox(height: 20),
                         Text(
                           _getWeatherDescription(currentWeather?['weathercode'] ?? 0),
@@ -281,7 +272,11 @@ class _WeatherPageState extends State<WeatherPage> {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  Container(
+                  ClipRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    child:
+                    Container(
                     height: 140,
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.1),
@@ -354,28 +349,35 @@ class _WeatherPageState extends State<WeatherPage> {
                         );
                       },
                     ),
-                  ),
+                  ),)),
 
                   const SizedBox(height: 40),
 
                   // Additional Weather Info Cards
                   Row(
                     children: [
-                      Expanded(
+                      ClipRect(
+                        child:
+                        BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),child:Expanded(
                         child: _buildInfoCard(
                           'Humidity',
                           '${hourlyData?['relative_humidity_2m'][0] ?? '--'}%',
                           Icons.water_drop,
                         ),
-                      ),
+                      ),)),
                       const SizedBox(width: 15),
+                      ClipRect(child:
+                      BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                      child:
                       Expanded(
                         child: _buildInfoCard(
                           'Precipitation',
                           '${hourlyData?['precipitation_probability'][0] ?? 0}%',
                           Icons.grain,
                         ),
-                      ),
+                      ),))
                     ],
                   ),
 
@@ -392,6 +394,10 @@ class _WeatherPageState extends State<WeatherPage> {
                     ),
                   ),
                   const SizedBox(height: 15),
+                  ClipRect(child:
+                  BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                  child:
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.1),
@@ -483,7 +489,7 @@ class _WeatherPageState extends State<WeatherPage> {
                         );
                       },
                     ),
-                  ),
+                  ),)),
 
                   const SizedBox(height: 30),
                 ],
@@ -527,23 +533,5 @@ class _WeatherPageState extends State<WeatherPage> {
         ],
       ),
     );
-  }
-
-  List<Color> _getGradientColors(int weatherCode) {
-    if (weatherCode == 0) {
-      // Clear sky - bright blue
-      return [const Color(0xFF2E7EE8), const Color(0xFF4B9FF2), const Color(0XFFC8E6C9)];
-    } else if (weatherCode <= 3) {
-      // Partly cloudy
-      return [const Color(0xFF43A047), const Color(0xFF4CAF50), const Color(0XFFC8E6C9)];
-    } else if (weatherCode <= 67) {
-      // Rainy - darker blue/grey
-      return [const Color(0xFF2C3E50), const Color(0xFF34495E), const Color(0xFF5D6D7E)];
-    } else if (weatherCode <= 95) {
-      // Stormy - dark
-      return [const Color(0xFF1A1A2E), const Color(0xFF16213E), const Color(0xFF0F3460)];
-    }
-    // Default
-    return [const Color(0xFF1E3C72), const Color(0xFF2A5298), const Color(0xFF7E8BA3)];
   }
 }

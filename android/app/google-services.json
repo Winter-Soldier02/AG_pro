@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "880811800818",
+    "project_id": "ag-pro02",
+    "storage_bucket": "ag-pro02.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880811800818:android:de8a894b7efa11bc50f86b",
+        "android_client_info": {
+          "package_name": "com.example.ag_pro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdMu8dJkHw72KzOEZfzRzhwE9O6LOPkRQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

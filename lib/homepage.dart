@@ -9,6 +9,8 @@ import 'menupage.dart';
 import 'weatherpage.dart';
 import 'weatherservices.dart'; // ADDED: Import weather service
 import 'dart:async';
+import 'dart:ui';
+import 'recommendations_page.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key});
@@ -185,10 +187,12 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       },
       child: Container(
-        height: 200,
+        height: 300,
         margin: EdgeInsets.symmetric(horizontal: 0),
         decoration: BoxDecoration(
-          color: Colors.green[300],
+          image:DecorationImage(image: AssetImage("assets/weather/topcimage.png"),
+          fit: BoxFit.cover),
+          // color: Colors.green[300],
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(50),
             bottomRight: Radius.circular(50),
@@ -199,65 +203,124 @@ class _MyHomePageState extends State<MyHomePage> {
             bottomLeft: Radius.circular(50),
             bottomRight: Radius.circular(50),
           ),
+
           child: Stack(
             children: [
-              PageView.builder(
-                controller: _cardPageController,
-                itemCount: _cards.length,
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentCardIndex = index;
-                  });
-                  print('Page changed to: $index');
-                },
-                itemBuilder: (context, index) {
-                  final card = _cards[index];
-                  return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Icon(
-                            card['icon'],
-                            size: 32,
-                            color: Colors.white,
-                          ),
+              Positioned(
+                top: 35,
+                left: 25,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    child: Container(
+                      height:50,
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.3),
                         ),
-                        SizedBox(height: 15),
-                        Text(
-                          card['title'],
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Icon(
+                            Icons.person,
                             color: Colors.white,
+                            size: 16,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: 10),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            card['content'],
+                          SizedBox(width: 6),
+                          Text(
+                            "Hello Aniket",
                             style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+
+              Positioned(
+                top: 50, //  space after the glass chip
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: PageView.builder(
+                  controller: _cardPageController,
+                  itemCount: _cards.length,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentCardIndex = index;
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    final card = _cards[index];
+                    return Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.25),
+                                  borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.3),
+                                  ),
+                                ),
+                                child: Icon(
+                                  card['icon'],
+                                  size: 32,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 15),
+                          Text(
+                            card['title'],
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Text(
+                              card['content'],
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white.withOpacity(0.9),
+                              ),
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
+
               Positioned(
                 bottom: 15,
                 left: 0,
@@ -349,10 +412,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // 👈 SINGLE SOLID COLOR
       appBar: AppBar(
         toolbarHeight: 0,
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('agp'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text('agp'),
       ),
       body: Center(
         child: PageView(
@@ -365,32 +430,26 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(color: Colors.green[300]),
-                    height: 100,
-                    padding: EdgeInsets.only(left: 50),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              'Hello User!',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(width: 150),
-                            Icon(Icons.person),
-                          ],
-                        )
-                      ],
+                  _buildAutoRefreshCard(),
+                  const SizedBox(height: 30),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Text(
+                      'QUICK ACCESS',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
                     ),
                   ),
-                  _buildAutoRefreshCard(),
-                  SizedBox(height: 30),
 
-                  // UPDATED: Weather card with real API data
+                  const SizedBox(height: 25),
+
+                  // WEATHER CARD
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -399,12 +458,25 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     },
                     child: Container(
+
                       height: 250,
                       width: double.infinity,
-                      margin: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
-                      padding: EdgeInsets.all(30.0),
+                      margin: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
+                      padding: const EdgeInsets.all(30.0),
                       decoration: BoxDecoration(
                         color: Colors.green.shade100,
+                        // image: DecorationImage(
+                        //   image: AssetImage("assets/weather/WEATH2.png"),
+                        //   fit: BoxFit.cover,
+                        // ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                            offset: Offset(0, 4), // x, y
+                          ),
+                        ],
                         borderRadius: BorderRadius.circular(35),
                       ),
                       child: _weatherLoading
@@ -415,7 +487,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             CircularProgressIndicator(
                               color: Colors.green.shade700,
                             ),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
                             Text(
                               'Loading weather...',
                               style: TextStyle(
@@ -423,10 +495,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                 fontSize: 14,
                               ),
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             TextButton(
                               onPressed: _loadWeatherData,
-                              child: Text('Retry'),
+                              child: const Text('Retry'),
                             ),
                           ],
                         ),
@@ -437,26 +509,27 @@ class _MyHomePageState extends State<MyHomePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
+                              const Text(
                                 "Weather",
                                 style: TextStyle(
+                                  color: Colors.black,
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               Row(
                                 children: [
-                                  Icon(Icons.location_on,
-                                      size: 18, color: Colors.green.shade900),
-                                  SizedBox(width: 4),
+                                  const Icon(Icons.location_on,
+                                      size: 18, color: Colors.red),
+                                  const SizedBox(width: 4),
                                   Text(
-                                    _cityName, // CHANGED: Now from API
-                                    style: TextStyle(
+                                    _cityName,
+                                    style: const TextStyle(
                                       fontSize: 14,
-                                      color: Colors.black87,
+                                      color: Colors.black,
                                     ),
                                   ),
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
                                   InkWell(
                                     onTap: _loadWeatherData,
                                     child: Icon(
@@ -469,22 +542,17 @@ class _MyHomePageState extends State<MyHomePage> {
                               )
                             ],
                           ),
-                          SizedBox(height: 30),
-
-                          // THIS IS THE PART YOU WANTED UPDATED!
+                          const SizedBox(height: 30),
                           Expanded(
                             child: GridView.count(
                               crossAxisCount: 2,
                               crossAxisSpacing: 12,
                               mainAxisSpacing: 12,
-                              childAspectRatio: 3,
-                              physics: NeverScrollableScrollPhysics(),
+                              childAspectRatio: 2,
+                              physics: const NeverScrollableScrollPhysics(),
                               children: [
-                                // CHANGED: All values now from API
-                                _weatherItem(
-                                    Icons.thermostat, "Temperature", _temperature),
-                                _weatherItem(
-                                    Icons.water_drop, "Humidity", _humidity),
+                                _weather1Item(Icons.thermostat, "Temperature", _temperature),
+                                _weatherItem(Icons.water_drop, "Humidity", _humidity),
                                 _weatherItem(Icons.grain, "Rainfall", _rainfall),
                                 _weatherItem(Icons.air, "Wind", _windSpeed),
                               ],
@@ -495,28 +563,51 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
 
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
+
+                  // SOIL HEALTH CARD
                   Container(
                     height: 250,
                     width: 400,
-                    margin: EdgeInsets.symmetric(horizontal: 30.0),
-                    padding: EdgeInsets.all(50.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 30.0),
+                    padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
                     decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 10,
+                          spreadRadius: 2,
+                          offset: Offset(0, 4), // x, y
+                        ),
+                      ],
                       borderRadius: BorderRadius.circular(50.00),
                       color: Colors.green.shade100,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Soil Health',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.green.shade500,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Text(
+                                'Soil Health',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                        Row(
-                          children: [],
-                        ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Expanded(
                           child: Column(
                             children: [
@@ -524,100 +615,158 @@ class _MyHomePageState extends State<MyHomePage> {
                               _soilHealth("Moisture", "45%"),
                               _soilHealth("Nitrogen (N)", "120 "),
                               _soilHealth("Phosphorus (P)", "50"),
-                              _soilHealth("Potassium (K)", "80")
+                              _soilHealth("Potassium (K)", "80"),
                             ],
                           ),
                         )
                       ],
                     ),
                   ),
-                  SizedBox(height: 30),
+
+                  const SizedBox(height: 30),
                 ],
               ),
             ),
             PlantHealthPage(),
             SoilHealthPage(),
             MenuPage(),
+            RecommendationsPage(),
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.green.shade100,
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(14.0),
-          child: GNav(
-            color: Colors.black,
-            activeColor: Colors.black,
-            backgroundColor: Colors.green.shade100,
-            gap: 8,
-            haptic: true,
-            padding: EdgeInsets.all(15),
-            selectedIndex: _selectedIndex,
-            onTabChange: _onTabChange,
-            tabs: [
-              GButton(
-                icon: Icons.home,
-                text: 'Home',
-                textColor: Colors.black,
-                backgroundColor: Colors.green[300],
-                iconActiveColor: Colors.black,
+
+      // BOTTOM NAV (unchanged)
+      bottomNavigationBar: ClipRRect(
+        // borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              // borderRadius: BorderRadius.circular(25),
+              // border: Border.all(color: Colors.grey.withOpacity(0.3)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: GNav(
+                color: Colors.black,
+                activeColor: Colors.black,
+                backgroundColor: Colors.transparent,
+                gap: 8,
+                haptic: true,
+                padding: const EdgeInsets.all(15),
+                selectedIndex: _selectedIndex,
+                onTabChange: _onTabChange,
+                tabs: [
+                  GButton(icon: Icons.home, text: 'Home', backgroundColor: Colors.green[300]),
+                  GButton(icon: Icons.eco, text: 'Plant Health', backgroundColor: Colors.green[300]),
+                  GButton(icon: Icons.science, text: 'Soil and fertilizer', backgroundColor: Colors.green[300]),
+                  GButton(icon: Icons.menu, text: 'Menu', backgroundColor: Colors.green[300]),
+                  GButton(icon: Icons.recommend, text: 'recommendations', backgroundColor: Colors.green[300]),
+                ],
               ),
-              GButton(
-                icon: Icons.eco,
-                text: 'Plant Health',
-                textColor: Colors.black,
-                backgroundColor: Colors.green[300],
-                iconActiveColor: Colors.black,
-              ),
-              GButton(
-                icon: Icons.science,
-                text: 'Soil and fertilizer',
-                textColor: Colors.black,
-                backgroundColor: Colors.green[300],
-                iconActiveColor: Colors.black,
-              ),
-              GButton(
-                icon: Icons.menu,
-                text: 'Menu',
-                textColor: Colors.black,
-                backgroundColor: Colors.green[300],
-                iconActiveColor: Colors.black,
-              ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
-}
+
+
 
 // Helper Widget
-Widget _weatherItem(IconData icon, String label, String value) {
-  return Row(
-    children: [
-      Icon(icon, size: 24, color: Colors.green.shade800),
-      SizedBox(width: 8),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _weatherItem(IconData icon, String label, String value) {
+    return _glassCapsule(
+      child: Row(
         children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 12, color: Colors.black54),
-          ),
-          SizedBox(height: 6),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
+          Icon(icon, size: 22, color: Colors.white),
+          const SizedBox(width: 8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
         ],
       ),
-    ],
-  );
+    );
+  }
+
+  Widget _weather1Item(IconData icon, String label, String value) {
+    return _glassCapsule(
+      child: Row(
+        children: [
+          Icon(icon, size: 22, color: Colors.orangeAccent),
+          const SizedBox(width: 8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _glassCapsule({required Widget child}) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.green.shade500, // dark glass for contrast
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.25),
+            ),
+          ),
+          child: child,
+        ),
+      ),
+    );
+  }
+
+
+
+
 }
+
+
+
+
